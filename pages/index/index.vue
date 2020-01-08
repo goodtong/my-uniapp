@@ -11,7 +11,7 @@
 					关注
 				</view>
 			</view>
-			<view class="index-list2">我是标题</view>
+			<view class="index-list2">我是标题{{ item }}</view>
 			<view class="index-list3 u-f-ajc">
 				<image src="../../static/demo/datapic/29.jpg" mode="widthFix" lazy-load></image>
 			</view>
@@ -47,6 +47,13 @@ export default {
 		return {}
 	},
 	onLoad() {},
+	onReachBottom() {
+		uni.hideTabBar({
+			success: () => {
+				console.log('success')
+			}
+		})
+	},
 	methods: {}
 }
 </script>
