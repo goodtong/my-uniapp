@@ -1,102 +1,81 @@
 <template>
 	<view>
-		<view class="index-list" v-for="(item, index) in 10" :key="index">
-			<view class="index-list1 u-f-ac u-f-jsb">
-				<view class="u-f-ac">
-					<image src="../../static/demo/userpic/14.jpg" mode="widthFix" lazy-load></image>
-					昵称
-				</view>
-				<view class="u-f-ac">
-					<view class="icon iconfont icon-zengjia"></view>
-					关注
-				</view>
-			</view>
-			<view class="index-list2">我是标题{{ item }}</view>
-			<view class="index-list3 u-f-ajc">
-				<image src="../../static/demo/datapic/29.jpg" mode="widthFix" lazy-load></image>
-			</view>
-			<view class="index-list4 u-f-ac u-f-jsb">
-				<view class="u-f-ac">
-					<view class="u-f-ac">
-						<view class="icon iconfont icon-icon_xiaolian-mian"></view>
-						987
-					</view>
-					<view class="u-f-ac">
-						<view class="icon iconfont icon-kulian"></view>
-						10
-					</view>
-				</view>
-				<view class="u-f-ac">
-					<view class="u-f-ac">
-						<view class="icon iconfont icon-pinglun1"></view>
-						34
-					</view>
-					<view class="u-f-ac">
-						<view class="icon iconfont icon-zhuanfa"></view>
-						7
-					</view>
-				</view>
-			</view>
-		</view>
+		<swiper-tab-head :tabIndex="tabIndex" @ontabtap="ontabtap"></swiper-tab-head>
+
+		<!-- <block v-for="(item, index) in 10" :key="index">
+			<index-list></index-list>
+		</block> -->
+
+		<swiper
+			class="swiper-box"
+			:current="tabIndex"
+			:style="{ height: swiperheight + 'px' }"
+			@change="tabChange"
+		>
+			<swiper-item v-for="(item, index) in 9" :key="index">
+				<scroll-view scroll-y class="list">
+					<block v-for="(litem, lindex) in index + 1" :key="lindex"><index-list></index-list></block>
+				</scroll-view>
+			</swiper-item>
+		</swiper>
 	</view>
 </template>
 
 <script>
+import swiperTabHead from '@/components/swiper-tab-head.vue'
+import indexList from '@/components/index-list.vue'
+
 export default {
-	data() {
-		return {}
+	components: {
+		swiperTabHead,
+		indexList
 	},
-	onLoad() {},
-	onReachBottom() {
-		uni.hideTabBar({
-			success: () => {
-				console.log('success')
+	data() {
+		return {
+			scroll: 0,
+			swiperheight: 0,
+			tabIndex: 0
+		}
+	},
+	onLoad() {
+		uni.getSystemInfo({
+			success: res => {
+				console.log(res.windowHeight)
+				console.log(res.windowHeight - uni.upx2px(100))
+				let height = res.windowHeight - uni.upx2px(100)
+				this.swiperheight = height
 			}
 		})
 	},
-	methods: {}
+	// 设置滚动隐藏 TabBar
+	// onPageScroll(e) {
+	// 	if (this.scroll > e.scrollTop) {
+	// 		uni.showTabBar({
+	// 			animation: true
+	// 		})
+	// 	} else {
+	// 		uni.hideTabBar({
+	// 			animation: true
+	// 		})
+	// 	}
+	// 	this.scroll = e.scrollTop
+	// },
+	methods: {
+		ontabtap(index) {
+			this.tabIndex = index
+		},
+		// 滑动事件
+		tabChange(e) {
+			this.tabIndex = e.detail.current
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
-.index-list {
-	padding: 20upx;
-	border-bottom: 1upx solid #eeeeee;
-}
-.index-list1 > view:first-child {
-	color: #999999;
-}
-.index-list1 > view:first-child image {
-	width: 85upx;
-	height: 85upx;
-	border-radius: 100%;
-	margin-right: 15upx;
-}
-.index-list1 > view:last-child {
-	background: #f4f4f4;
-	border-radius: 5upx;
-	padding: 0 10upx;
-}
-.index-list2 {
-	padding-top: 15upx;
-	font-size: 32upx;
-}
-.index-list3 {
-	// position: relative;
-	padding-top: 15upx;
-}
-.index-list3 > image {
-	width: 100%;
-	border-radius: 20upx;
-}
-.index-list4 view {
-	color: #d5d5d5;
-}
-.index-list4 {
-	padding: 15upx 0;
-}
-.index-list4 > view > view > view,
-.index-list4 > view > view:first-child {
-	margin-right: 15upx;
+.swiper-box {
+	scroll-view {
+		height: 100%;
+	}
 }
 </style>
